@@ -2,17 +2,15 @@ package com.algaworksapi.algaworksapi.resource;
 
 import com.algaworksapi.algaworksapi.event.RecursoCriadoEvent;
 import com.algaworksapi.algaworksapi.model.Categoria;
+import com.algaworksapi.algaworksapi.model.Pessoa;
 import com.algaworksapi.algaworksapi.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,8 +42,9 @@ public class CategoriaResource {
     }
 
     @GetMapping("/{codigo}")
-    public Optional<Categoria> buscarPeloCodigo(@PathVariable Long codigo){
-        return categoriaRepository.findById(codigo);
+    public ResponseEntity<Optional<Categoria>> buscarPeloCodigo(@PathVariable Long codigo){
+        Optional<Categoria> categoria = categoriaRepository.findById(codigo);
+        return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
     }
 
 

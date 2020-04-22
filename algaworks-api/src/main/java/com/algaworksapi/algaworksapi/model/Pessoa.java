@@ -1,11 +1,14 @@
 package com.algaworksapi.algaworksapi.model;
 
+import net.minidev.json.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
+@Table(name="pessoa")
 public class Pessoa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +55,14 @@ public class Pessoa {
         this.ativo = ativo;
     }
 
+    //Asi ignora esta propiedad en el JSON
+/*
+    @JsonIgnore
+    @Transient
+    public boolean isInativo(){
+        return !this.ativo;
+    }
+*/
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
