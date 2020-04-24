@@ -42,12 +42,12 @@ public class Lancamento {
         this.codigo = codigo;
     }
 
-    public String getDescricao() {
+    public String getDecricao() {
         return decricao;
     }
 
-    public void setDescricao(String descricao) {
-        this.decricao = descricao;
+    public void setDecricao(String decricao) {
+        this.decricao = decricao;
     }
 
     public LocalDate getDataVencimento() {
