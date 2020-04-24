@@ -1,20 +1,19 @@
 package com.algaworksapi.algaworksapi.resource;
 
+import org.springframework.data.domain.Pageable;
 import com.algaworksapi.algaworksapi.event.RecursoCriadoEvent;
 import com.algaworksapi.algaworksapi.exceptionhandler.AlgamoneyExceptionHandler;
 import com.algaworksapi.algaworksapi.model.Lancamento;
-import com.algaworksapi.algaworksapi.model.Pessoa;
 import com.algaworksapi.algaworksapi.repository.LancamentoRepository;
-import com.algaworksapi.algaworksapi.repository.PessoaRepository;
+import com.algaworksapi.algaworksapi.repository.fiter.LancamentoFilter;
 import com.algaworksapi.algaworksapi.service.LancamentoService;
 import com.algaworksapi.algaworksapi.service.exception.PessoaInexistenteOuInativaException;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.http.HttpHeaders;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +37,8 @@ public class LancamentoResource {
     private MessageSource messageSource;
 
     @GetMapping
-    public List<Lancamento> listar(){
-        return lancamentoRepository.findAll();
+    public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable){
+        return lancamentoRepository.filtrar(lancamentoFilter, pageable);
     }
 
     @Autowired //Disparando un evento de aplicación, necesito validar que no este duplicado
