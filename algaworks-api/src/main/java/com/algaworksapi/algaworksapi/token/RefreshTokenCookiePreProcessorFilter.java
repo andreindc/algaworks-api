@@ -16,10 +16,8 @@ import java.util.Map;
 @Order(Ordered.HIGHEST_PRECEDENCE) //Filtro con prioridad alta
 public class RefreshTokenCookiePreProcessorFilter implements Filter {
 
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
     }
 
     @Override
@@ -29,8 +27,9 @@ public class RefreshTokenCookiePreProcessorFilter implements Filter {
                 && "refresh_token".equals(req.getParameter("grant_type"))
                 && req.getCookies() !=null){
             for(Cookie cookie: req.getCookies()){
-                if(cookie.getName().equals("refresh Token")){ //nombre del cookie
+                if(cookie.getName().equals("refreshToken")){ //nombre del cookie
                     String refreshToken = cookie.getValue();
+                    System.out.println("refreshToken: "+refreshToken);
                     req = new MyServletRequestWrapper(req, refreshToken);
                 }
             }
@@ -45,7 +44,7 @@ public class RefreshTokenCookiePreProcessorFilter implements Filter {
 
     }
 
-    static class MyServletRequestWrapper extends HttpServletRequestWrapper{
+    static class MyServletRequestWrapper extends HttpServletRequestWrapper {
         private String refreshToken;
 
         public MyServletRequestWrapper(HttpServletRequest request, String refreshToken){
@@ -55,7 +54,7 @@ public class RefreshTokenCookiePreProcessorFilter implements Filter {
 
         @Override
         public Map<String, String[]> getParameterMap(){
-            ParameterMap <String, String[]> map = new ParameterMap<>(getRequest().getParameterMap());
+            ParameterMap<String, String[]> map = new ParameterMap<>(getRequest().getParameterMap());
             map.put("refresh_token", new String[]{ refreshToken });
             map.setLocked(true);
             return map;
@@ -63,3 +62,4 @@ public class RefreshTokenCookiePreProcessorFilter implements Filter {
     }
 
 }
+

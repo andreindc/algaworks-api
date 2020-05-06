@@ -1,5 +1,7 @@
 package com.algaworksapi.algaworksapi.model;
 
+import net.minidev.json.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

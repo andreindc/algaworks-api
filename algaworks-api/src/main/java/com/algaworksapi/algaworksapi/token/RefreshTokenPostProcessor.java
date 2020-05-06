@@ -1,5 +1,6 @@
 package com.algaworksapi.algaworksapi.token;
 
+
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -18,34 +19,38 @@ import javax.servlet.http.HttpServletResponse;
 
 @ControllerAdvice
 public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2AccessToken> {
+
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        System.out.println(returnType.getMethod().getName());
         return returnType.getMethod().getName().equals("postAccessToken");
     }
 
     @Override
-    public OAuth2AccessToken beforeBodyWrite(OAuth2AccessToken body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-       HttpServletRequest req= ((ServletServerHttpRequest) request).getServletRequest();
-       HttpServletResponse resp = ((ServletServerHttpResponse) response).getServletResponse();
+    public OAuth2AccessToken beforeBodyWrite(OAuth2AccessToken body, MethodParameter returnType,
+                                             MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType,
+                                             ServerHttpRequest request, ServerHttpResponse response) {
 
-       DefaultOAuth2AccessToken token = (DefaultOAuth2AccessToken) body;
+        HttpServletRequest req = ((ServletServerHttpRequest) request).getServletRequest();
+        HttpServletResponse resp = ((ServletServerHttpResponse) response).getServletResponse();
 
-       String refreshToken = body.getRefreshToken().getValue();
-       adicionarRefreshTokenNoCookie(refreshToken,req, resp);
-       removerRefreshTokenDoBody(token);
-       return body;
+        DefaultOAuth2AccessToken token = (DefaultOAuth2AccessToken) body;
+
+        String refreshToken = body.getRefreshToken().getValue();
+        adicionarRefreshTokenNoCookie(refreshToken, req, resp);
+        removerRefreshTokenNoBody(token);
+
+        return body;
     }
 
-    private void removerRefreshTokenDoBody(DefaultOAuth2AccessToken token) {
+    private void removerRefreshTokenNoBody(DefaultOAuth2AccessToken token) {
         token.setRefreshToken(null);
     }
 
     private void adicionarRefreshTokenNoCookie(String refreshToken, HttpServletRequest req, HttpServletResponse resp) {
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(false);        //Mudar para true en producao;
-        refreshTokenCookie.setPath(req.getContextPath()+"/oauth/token");
+        refreshTokenCookie.setSecure(false); //Mudar a true en producción
+        refreshTokenCookie.setPath(req.getContextPath() + "/oauth/token");
         refreshTokenCookie.setMaxAge(2592000);
         resp.addCookie(refreshTokenCookie);
     }
