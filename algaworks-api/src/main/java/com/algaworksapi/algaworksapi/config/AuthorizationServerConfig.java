@@ -27,12 +27,19 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception{
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         clients.inMemory()
-                .withClient("angular")
-                .secret(encoder.encode("@angular"))
-                .scopes("read","write")
-                .authorizedGrantTypes("password", "refresh_token")
-                .accessTokenValiditySeconds(3600)
-                .refreshTokenValiditySeconds(3600*24);
+                    .withClient("angular")
+                    .secret(encoder.encode("@angular"))
+                    .scopes("read","write")
+                    .authorizedGrantTypes("password", "refresh_token")
+                    .accessTokenValiditySeconds(3600)
+                    .refreshTokenValiditySeconds(3600*24)
+                .and()
+                    .withClient("mobile")
+                    .secret(encoder.encode("@mobile"))
+                    .scopes("read")
+                    .authorizedGrantTypes("password", "refresh_token")
+                    .accessTokenValiditySeconds(1800)
+                    .refreshTokenValiditySeconds(3600 * 24);
     }
 
 
