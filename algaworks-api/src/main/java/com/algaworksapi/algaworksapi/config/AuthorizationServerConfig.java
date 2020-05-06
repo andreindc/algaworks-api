@@ -40,6 +40,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                     .authorizedGrantTypes("password", "refresh_token")
                     .accessTokenValiditySeconds(1800)
                     .refreshTokenValiditySeconds(3600 * 24);
+        //Access token es en navegador, es más inseguro
     }
 
 
