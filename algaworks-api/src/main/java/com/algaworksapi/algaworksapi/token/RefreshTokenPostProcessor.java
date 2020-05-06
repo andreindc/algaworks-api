@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2AccessToken> {
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
+        System.out.println(returnType.getMethod().getName());
         return returnType.getMethod().getName().equals("postAccessToken");
     }
 
