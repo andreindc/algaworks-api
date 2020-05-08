@@ -1,5 +1,6 @@
 package com.algaworksapi.algaworksapi.resource;
 
+import com.algaworksapi.algaworksapi.repository.projectio.ResumoLancamento;
 import org.springframework.data.domain.Pageable;
 import com.algaworksapi.algaworksapi.event.RecursoCriadoEvent;
 import com.algaworksapi.algaworksapi.exceptionhandler.AlgamoneyExceptionHandler;
@@ -59,6 +60,12 @@ public class LancamentoResource {
     public ResponseEntity<Optional<Lancamento>> buscarPeloCodigo(@PathVariable Long codigo){
         Optional<Lancamento> lancamento = lancamentoRepository.findById(codigo);
         return lancamento != null ? ResponseEntity.ok(lancamento) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(params = "resumo")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+    public Page<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter, Pageable pageable){
+        return lancamentoRepository.resumir(lancamentoFilter, pageable);
     }
 
     @DeleteMapping("/{codigo}")
